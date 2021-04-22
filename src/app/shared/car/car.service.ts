@@ -18,8 +18,9 @@ export class CarService {
     return this.http.get(this.CAR_API + '/' + id);
   }
 
-  save(car: any): Observable<any> {
+  save(car: any, owner: string): Observable<any> {
     let result: Observable<Object>;
+    car.ownerDni = owner;
     if (car['href']) {
       result = this.http.put(car.href, car);
     } else {

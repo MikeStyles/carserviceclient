@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CarService } from '../shared/car/car.service';
 import { GiphyService } from '../shared/giphy/giphy.service';
 import { NgForm } from '@angular/forms';
+import { OwnerService } from '../shared/owner/owner.service';
 
 @Component({
   selector: 'app-car-edit',
@@ -12,16 +13,21 @@ import { NgForm } from '@angular/forms';
 })
 export class CarEditComponent implements OnInit, OnDestroy {
   car: any = {};
+  owners: any[];
+  ownerSelected: string = ''
 
   sub: Subscription;
 
   constructor(private route: ActivatedRoute,
-              private router: Router,
-              private carService: CarService,
-              private giphyService: GiphyService) {
+    private router: Router,
+    private carService: CarService,
+    private giphyService: GiphyService,
+    private ownerService: OwnerService
+    ) {
   }
 
   ngOnInit() {
+    this.getOwners()
     this.sub = this.route.params.subscribe(params => {
       const id = params['id'];
       if (id) {
@@ -48,7 +54,7 @@ export class CarEditComponent implements OnInit, OnDestroy {
   }
 
   save(form: NgForm) {
-    this.carService.save(form).subscribe(result => {
+    this.carService.save(form, this.ownerSelected).subscribe(result => {
       this.gotoList();
     }, error => console.error(error));
   }
@@ -58,5 +64,19 @@ export class CarEditComponent implements OnInit, OnDestroy {
       this.gotoList();
     }, error => console.error(error));
   }
+  
+  getOwners() {
+    this.ownerService.getAll().subscribe(data => {
+      console.log(data._embedded);
+      this.owners = data._embedded.owners;
+      console.log(this.owners);
+    })
+  }
+  
+  selectOwner(owner: any) {
+    console.log(owner)
+    this.ownerSelected = owner
+  }
+
 }
 
