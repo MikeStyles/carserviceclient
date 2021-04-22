@@ -30,12 +30,6 @@ export class OwnerService {
       delete owner['href'];
       result = this.http.post(this.OWNER_API, owner);
     }
-
-    /* if (owner['href']) {
-      result = this.http.put(owner.href, owner);
-    } else {
-      result = this.http.post(this.OWNER_API, owner);
-    } */
     return result;
   }
 
